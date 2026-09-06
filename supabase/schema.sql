@@ -101,8 +101,8 @@ alter table public.sensor_readings enable row level security;
 create policy "members can read their farms" on public.farms for select to authenticated
 using (exists (select 1 from public.farm_members m where m.farm_id = farms.id and m.user_id = (select auth.uid())));
 
-create policy "members can read farm memberships" on public.farm_members for select to authenticated
-using (user_id = (select auth.uid()) or exists (select 1 from public.farm_members self where self.farm_id = farm_members.farm_id and self.user_id = (select auth.uid())));
+create policy "users can read own memberships" on public.farm_members for select to authenticated
+using (user_id = (select auth.uid()));
 
 create policy "members can read rooms" on public.rooms for select to authenticated
 using (exists (select 1 from public.farm_members m where m.farm_id = rooms.farm_id and m.user_id = (select auth.uid())));
